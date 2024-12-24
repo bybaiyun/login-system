@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 public class SysUser{
     private Long id;
     private String username;

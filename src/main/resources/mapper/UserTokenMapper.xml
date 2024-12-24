@@ -1,4 +1,6 @@
-<mapper namespace="mapper.UserTokenMapper">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserTokenMapper">
     <insert id="insert" parameterType="UserToken">
         INSERT INTO user_token (user_id, access_token, refresh_token, device_type, device_id, ip_address, create_time, access_token_expires_at, refresh_token_expires_at, status)
         VALUES (#{userId}, #{accessToken}, #{refreshToken}, #{deviceType}, #{deviceId}, #{ipAddress}, #{createTime}, #{accessTokenExpiresAt}, #{refreshTokenExpiresAt}, #{status})
