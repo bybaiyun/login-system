@@ -1,0 +1,24 @@
+<mapper namespace="mapper.SysUserMapper">
+    <insert id="insert" parameterType="SysUser">
+        INSERT INTO sys_user (username, password, real_name, email, phone_number, status, role, created_time, updated_time, deleted)
+        VALUES (#{username}, #{password}, #{realName}, #{email}, #{phoneNumber}, #{status}, #{role}, #{createdTime}, #{updatedTime}, #{deleted})
+    </insert>
+
+    <select id="findById" parameterType="Long" resultType="SysUser">
+        SELECT * FROM sys_user WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultType="SysUser">
+        SELECT * FROM sys_user
+    </select>
+
+    <update id="update" parameterType="SysUser">
+        UPDATE sys_user SET username = #{username}, password = #{password}, real_name = #{realName}, email = #{email},
+        phone_number = #{phoneNumber}, status = #{status}, role = #{role}, updated_time = #{updatedTime}, deleted = #{deleted}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM sys_user WHERE id = #{id}
+    </delete>
+</mapper>

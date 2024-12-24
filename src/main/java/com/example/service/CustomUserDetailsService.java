@@ -1,5 +1,11 @@
 package com.example.service;
 
+import com.example.common.CustomUserDetails;
+import com.example.common.SysUser;
+import com.example.common.UserToken;
+import com.example.mapper.SysUserMapper;
+import com.example.mapper.UserTokenMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,24 +20,23 @@ import java.util.Collections;
  * @Description:
  */
 @Service("userDetailsService")
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository; // 关联sys_user表的JPA仓库或Mapper
-    private final TokenRepository tokenRepository; // 关联user_token表的JPA仓库或Mapper
+    private final SysUserMapper sysUserMapper;
 
-    public CustomUserDetailsService(UserRepository userRepository, TokenRepository tokenRepository) {
-        this.userRepository = userRepository;
-        this.tokenRepository = tokenRepository;
-    }
+    private final UserTokenMapper userTokenMapper;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         // 查询用户信息
-        SysUser user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        SysUser user = sysUserMapper.findByUserName(userName);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
 
         // 查询用户Token信息
-        UserToken userToken = tokenRepository.findByUserId(user.getId())
+        UserToken userToken = userTokenMapper.findByUserId(user.getId()).stream().findFirst()
                 .orElseThrow(() -> new UsernameNotFoundException("Token not found"));
 
         // 创建UserDetails

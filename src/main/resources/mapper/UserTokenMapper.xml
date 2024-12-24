@@ -1,0 +1,25 @@
+<mapper namespace="mapper.UserTokenMapper">
+    <insert id="insert" parameterType="UserToken">
+        INSERT INTO user_token (user_id, access_token, refresh_token, device_type, device_id, ip_address, create_time, access_token_expires_at, refresh_token_expires_at, status)
+        VALUES (#{userId}, #{accessToken}, #{refreshToken}, #{deviceType}, #{deviceId}, #{ipAddress}, #{createTime}, #{accessTokenExpiresAt}, #{refreshTokenExpiresAt}, #{status})
+    </insert>
+
+    <select id="findById" parameterType="Long" resultType="UserToken">
+        SELECT * FROM user_token WHERE id = #{id}
+    </select>
+
+    <select id="findByUserId" parameterType="Long" resultType="UserToken">
+        SELECT * FROM user_token WHERE user_id = #{userId}
+    </select>
+
+    <update id="update" parameterType="UserToken">
+        UPDATE user_token SET user_id = #{userId}, access_token = #{accessToken}, refresh_token = #{refreshToken},
+        device_type = #{deviceType}, device_id = #{deviceId}, ip_address = #{ipAddress}, create_time = #{createTime},
+        access_token_expires_at = #{accessTokenExpiresAt}, refresh_token_expires_at = #{refreshTokenExpiresAt}, status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM user_token WHERE id = #{id}
+    </delete>
+</mapper>
