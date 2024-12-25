@@ -19,7 +19,7 @@ import java.util.Collections;
  * @Date: 2024/12/23 20:50
  * @Description:
  */
-@Service("userDetailsService")
+@Service("customUserDetailsService")
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
