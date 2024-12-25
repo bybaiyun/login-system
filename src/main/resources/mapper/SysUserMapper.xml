@@ -13,6 +13,9 @@
     <select id="findAll" resultType="SysUser">
         SELECT * FROM sys_user
     </select>
+    <select id="findByUserName" resultType="com.example.common.SysUser">
+        SELECT * FROM sys_user WHERE username = #{username}
+    </select>
 
     <update id="update" parameterType="SysUser">
         UPDATE sys_user SET username = #{username}, password = #{password}, real_name = #{realName}, email = #{email},

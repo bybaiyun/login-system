@@ -12,9 +12,9 @@ public class BizTests {
     @Test
     public void test(){
         BCryptPasswordEncoder pw = new BCryptPasswordEncoder();
-        String encoded = pw.encode("suragi");
+        String encoded = pw.encode("123456");
         System.out.println(encoded);
-        boolean matches = pw.matches("suragi", encoded);
+        boolean matches = pw.matches("123456", encoded);
         System.out.println(matches);
     }
 }

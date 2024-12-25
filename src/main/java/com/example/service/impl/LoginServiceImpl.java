@@ -1,11 +1,14 @@
 package com.example.service.impl;
 
+import com.example.common.CustomUserDetails;
 import com.example.common.LoginRequest;
 import com.example.common.LoginResponse;
 import com.example.service.CustomTokenService;
 import com.example.service.LoginService;
 import jakarta.annotation.Resource;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.token.TokenService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,9 +23,9 @@ public class LoginServiceImpl implements LoginService {
     private CustomTokenService tokenService;
 
     @Override
-    public LoginResponse login(LoginRequest request) {
-
-        return new LoginResponse();
+    public LoginResponse login(CustomUserDetails userDetails) {
+        String accessToken = tokenService.createAccessToken(userDetails);
+        return new LoginResponse(accessToken, "");
     }
 
     @Override

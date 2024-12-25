@@ -1,6 +1,10 @@
 package com.example.service.impl;
 
+import com.example.common.CustomUserDetails;
 import com.example.service.CustomTokenService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,5 +16,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomTokenServiceImpl implements CustomTokenService {
 
+    @Resource
+    private ObjectMapper objectMapper;
+
+    @SneakyThrows
+    @Override
+    public String createAccessToken(CustomUserDetails userDetails) {
+        return objectMapper.writeValueAsString(userDetails);
+    }
 }
 

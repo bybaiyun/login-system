@@ -1,6 +1,10 @@
 package com.example.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * @Author: suragi
@@ -8,7 +12,9 @@ import lombok.Data;
  * @Description:
  */
 @Data
-public class LoginResponse {
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoginResponse implements Serializable {
     private String accessToken;
     private String refreshToken;
 }
