@@ -1,5 +1,6 @@
 package com.example.config;
 
+import com.example.filter.TokenAuthFilter;
 import com.example.service.CustomUserDetailsService;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @Author: suragi
@@ -26,6 +28,9 @@ public class SecurityConfig {
 
     @Resource(name = "customUserDetailsService")
     private CustomUserDetailsService customUserDetailsService;
+
+    @Resource
+    private TokenAuthFilter tokenAuthFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -52,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/auth/login", "/auth/refresh").permitAll()
                 .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable);
+        http.addFilterBefore(tokenAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

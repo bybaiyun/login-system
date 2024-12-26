@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.common.CustomUserDetails;
 import com.example.common.TokenPair;
+import com.example.common.UserToken;
 
 public interface CustomTokenService {
     /**
@@ -24,7 +25,11 @@ public interface CustomTokenService {
      * @param refreshToken
      * @return
      */
-    TokenPair createAccessTokenByReresshToken(String refreshToken);
+    TokenPair createAccessTokenByRefreshToken(String refreshToken);
 
     void logoutByDetail(CustomUserDetails details);
+
+    void save(UserToken token);
+
+    void validateAccessToken(String accessToken);
 }

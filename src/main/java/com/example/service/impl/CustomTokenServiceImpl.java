@@ -1,8 +1,11 @@
 package com.example.service.impl;
 
+import ch.qos.logback.classic.spi.EventArgUtil;
 import com.example.common.CustomUserDetails;
+import com.example.common.SysUser;
 import com.example.common.TokenPair;
 import com.example.common.UserToken;
+import com.example.mapper.SysUserMapper;
 import com.example.mapper.UserTokenMapper;
 import com.example.service.CustomTokenService;
 import com.example.utils.TokenUtils;
@@ -39,6 +42,9 @@ public class CustomTokenServiceImpl implements CustomTokenService {
     @Resource
     private UserTokenMapper userTokenMapper;
 
+    @Resource
+    private SysUserMapper sysUserMapper;
+
     @Override
     public void validateRefreshToken(String refreshToken) {
         List<UserToken> refreshTokens = userTokenMapper.findByRefreshToken(refreshToken);
@@ -54,30 +60,24 @@ public class CustomTokenServiceImpl implements CustomTokenService {
 
     @Override
     public TokenPair createTokenPair(CustomUserDetails userDetails) {
-        String accessToken = TokenUtils.generateAccessToken();
+        String accessToken = TokenUtils.generateAccessToken(userDetails.getUsername());
         String refreshToken = TokenUtils.generateRefreshToken();
-        LocalDateTime accessTokenExpiresAt = LocalDateTime.now().plus(Duration.ofMillis(ACCESS_TOKEN_EXPIRE_TIME));
-        LocalDateTime refreshTokenExpiresAt = LocalDateTime.now().plus(Duration.ofDays(REFRESH_TOKEN_EXPIRE_TIME));
-        userTokenMapper.insert(UserToken.builder()
-                .userId(userDetails.getUserId())
-                .accessToken(accessToken)
-                .accessTokenExpiresAt(accessTokenExpiresAt)
-                .refreshToken(refreshToken)
-                .refreshTokenExpiresAt(refreshTokenExpiresAt)
-                .deviceId(userDetails.getDeviceId())
-                .status(UserToken.TokenStatus.ACTIVE)
-                .createTime(LocalDateTime.now())
-                .build());
         return TokenPair.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .accessTokenExpiresAt(accessTokenExpiresAt)
+                .accessTokenExpiresAt(LocalDateTime.now().plus(Duration.ofMillis(ACCESS_TOKEN_EXPIRE_TIME)))
+                .refreshTokenExpiresAt(LocalDateTime.now().plus(Duration.ofDays(REFRESH_TOKEN_EXPIRE_TIME)))
                 .build();
     }
 
     @Override
-    public TokenPair createAccessTokenByReresshToken(String refreshToken) {
-        String accessToken = TokenUtils.generateAccessToken();
+    public TokenPair createAccessTokenByRefreshToken(String refreshToken) {
+        List<UserToken> userTokens = userTokenMapper.findByRefreshToken(refreshToken);
+        if (userTokens.isEmpty()) {
+            throw new RuntimeException("无效的RefreshToken");
+        }
+        SysUser user = sysUserMapper.findByUserId(userTokens.get(0).getUserId());
+        String accessToken = TokenUtils.generateAccessToken(user.getUsername());
         LocalDateTime accessTokenExpiresAt = LocalDateTime.now().plus(Duration.ofMillis(ACCESS_TOKEN_EXPIRE_TIME));
         userTokenMapper.updateAccessTokenByRefreshToken(accessToken, accessTokenExpiresAt, refreshToken);
         return TokenPair.builder()
@@ -89,7 +89,21 @@ public class CustomTokenServiceImpl implements CustomTokenService {
     @Override
     public void logoutByDetail(CustomUserDetails details) {
         //将当前用户从当前设备登出，即将这条token记录状态置为过期
+        //若deviceId为null，则将当前用户从所有设备登出
         userTokenMapper.updateStatusByUserIdAndDeviceId(UserToken.TokenStatus.EXPIRED, details.getUserId(), details.getDeviceId());
+    }
+
+    @Override
+    public void save(UserToken token) {
+        userTokenMapper.insert(token);
+    }
+
+    @Override
+    public void validateAccessToken(String accessToken) {
+        UserToken userToken = userTokenMapper.findByAccessToken(accessToken);
+        if (userToken == null) {
+            throw new RuntimeException("无效的AccessToken");
+        }
     }
 }
 

@@ -12,5 +12,7 @@ public class LoginRequest {
     private String username;
     private String password;
     private String accessToken;
+    private String deviceId;
+    private String deviceType;
 }
 

@@ -24,30 +24,21 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final SysUserMapper sysUserMapper;
-
-    private final UserTokenMapper userTokenMapper;
+    private final SysUserService sysUserService;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         // 查询用户信息
-        SysUser user = sysUserMapper.findByUserName(userName);
+        SysUser user = sysUserService.findByUsername(userName);
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("User not found");
         }
-
-        // 查询用户Token信息
-        UserToken userToken = userTokenMapper.findByUserId(user.getId()).stream().findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("Token not found"));
 
         // 创建UserDetails
         return new CustomUserDetails(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
-                userToken.getAccessTokenExpiresAt(),
-                userToken.getAccessToken(),
-                userToken.getDeviceId(),
                 Collections.emptyList() // 权限列表，后续可扩展
         );
     }

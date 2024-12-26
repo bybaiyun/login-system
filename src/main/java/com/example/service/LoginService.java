@@ -11,7 +11,7 @@ public interface LoginService {
     /**
      * 用户登录
      */
-    LoginResponse login(CustomUserDetails userDetails);
+    LoginResponse login(CustomUserDetails userDetails, LoginRequest loginRequest);
 
     /**
      * 由有效的RefreshToken刷新AccessToken

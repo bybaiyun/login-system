@@ -1,5 +1,6 @@
 package com.example.mapper;
 
+import com.example.common.SysUser;
 import com.example.common.UserToken;
 import org.apache.ibatis.annotations.*;
 
@@ -21,7 +22,11 @@ public interface UserTokenMapper {
 
     List<UserToken> findByRefreshToken(String refreshToken);
 
-    void updateAccessTokenByRefreshToken(String accessToken, LocalDateTime accessTokenExpiresAt, String refreshToken);
+    void updateAccessTokenByRefreshToken(String accessToken,
+                                         LocalDateTime accessTokenExpiresAt, String refreshToken);
 
-    void updateStatusByUserIdAndDeviceId(UserToken.TokenStatus tokenStatus, Long userId, String deviceId);
+    void updateStatusByUserIdAndDeviceId(@Param("status") UserToken.TokenStatus tokenStatus,
+                                         @Param("userId") Long userId, @Param("deviceId") String deviceId);
+
+    UserToken findByAccessToken(String accessToken);
 }

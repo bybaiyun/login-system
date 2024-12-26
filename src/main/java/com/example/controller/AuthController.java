@@ -2,7 +2,10 @@ package com.example.controller;
 
 import com.example.common.*;
 import com.example.service.LoginService;
+import com.example.utils.IPUtils;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -31,7 +35,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public Result<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public Result<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request){
         log.info("用户登录请求: {}", loginRequest);
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -57,21 +61,23 @@ public class AuthController {
          * 所以将 authentication 的 principal 推荐降级成 CustomUserDetails
          */
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        LoginResponse response = loginService.login(userDetails);
+        userDetails.setIpAddress(IPUtils.getIpAddr(request));
+        LoginResponse response = loginService.login(userDetails, loginRequest);
         log.info("用户登录成功: {}", response);
         return Result.success(response);
     }
 
     @PostMapping("/logout")
-    public Result<String> logout(){
-        log.info("用户登出请求");
+    public Result<String> logout(HttpServletRequest request, HttpServletResponse response){
         loginService.logout();
-        return Result.success("ok");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        new SecurityContextLogoutHandler().logout(request, response, authentication);
+        return Result.success("登出成功");
     }
 
     @PostMapping("/refresh")
     public Result<RefreshResponse> refresh(@RequestBody RefreshRequest refreshRequest){
-        log.info("刷新token请求");
+        log.info("刷新token请求:{}", refreshRequest);
         RefreshResponse response = loginService.refreshToken(refreshRequest.getRefreshToken());
         return Result.success(response);
     }

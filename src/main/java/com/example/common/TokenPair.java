@@ -18,5 +18,6 @@ public class TokenPair {
     private String accessToken;
     private String refreshToken;
     private LocalDateTime accessTokenExpiresAt;
+    private LocalDateTime refreshTokenExpiresAt;
 }
 

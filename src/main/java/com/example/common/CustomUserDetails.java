@@ -17,19 +17,17 @@ public class CustomUserDetails extends User {
 
     private Long userId;
     private String accessToken;
+    private String ipAddress;
     /**
      * accessToken过期时间
      */
     private LocalDateTime expiresAt;
     private String deviceId;
 
-    public CustomUserDetails(Long userId, String username, String password, LocalDateTime expiresAt,
-                             String deviceId, String accessToken, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(Long userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.userId = userId;
         this.accessToken = accessToken;
-        this.expiresAt = expiresAt;
-        //this.refreshToken = refreshToken;
         this.deviceId = deviceId;
     }
 
@@ -55,6 +53,14 @@ public class CustomUserDetails extends User {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 }
 

@@ -18,4 +18,6 @@ public interface SysUserMapper {
     void delete(Long id);
 
     SysUser findByUserName(String userName);
+
+    SysUser findByUserId(Long userId);
 }
