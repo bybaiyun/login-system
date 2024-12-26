@@ -16,12 +16,12 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/biz")
 public class BizController {
 
     private final SysUserService sysUserService;
 
-    @GetMapping("/getUsers")
+    @GetMapping("/getAllUsers")
     public Result<List<SysUser>> getUsers(){
         return Result.success(List.of(new SysUser()));
     }
@@ -29,6 +29,11 @@ public class BizController {
     @PostMapping("/disableUsers")
     public Result disableUserAccount(@RequestBody List<Long> userIds){
         sysUserService.disableUserAccount(userIds);
+        return Result.success("操作成功");
+    }
+
+    @PostMapping("/createUser")
+    public Result createUser(@RequestBody SysUser sysUser){
         return Result.success("操作成功");
     }
 }
