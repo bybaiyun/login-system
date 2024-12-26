@@ -1,11 +1,14 @@
 package com.example.service;
 
+import com.example.AccountStatusEnum;
 import com.example.common.CustomUserDetails;
 import com.example.common.SysUser;
 import com.example.common.UserToken;
 import com.example.mapper.SysUserMapper;
 import com.example.mapper.UserTokenMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,14 +34,14 @@ public class CustomUserDetailsService implements UserDetailsService {
         // 查询用户信息
         SysUser user = sysUserService.findByUsername(userName);
         if (Objects.isNull(user)) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("用户名或密码错误");
         }
-
         // 创建UserDetails
         return new CustomUserDetails(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
+                user.getStatus(),
                 Collections.emptyList() // 权限列表，后续可扩展
         );
     }

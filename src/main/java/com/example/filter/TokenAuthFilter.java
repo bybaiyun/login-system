@@ -2,7 +2,6 @@ package com.example.filter;
 
 import com.example.service.CustomTokenService;
 import com.example.service.CustomUserDetailsService;
-import com.example.service.SysUserService;
 import com.example.utils.TokenUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

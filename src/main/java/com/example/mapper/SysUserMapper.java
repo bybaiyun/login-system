@@ -20,4 +20,6 @@ public interface SysUserMapper {
     SysUser findByUserName(String userName);
 
     SysUser findByUserId(Long userId);
+
+    void disableUserAccount(List<Long> userIds);
 }

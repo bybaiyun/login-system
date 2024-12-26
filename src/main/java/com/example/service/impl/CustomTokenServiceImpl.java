@@ -105,5 +105,10 @@ public class CustomTokenServiceImpl implements CustomTokenService {
             throw new RuntimeException("无效的AccessToken");
         }
     }
+
+    @Override
+    public void disableByUserIds(List<Long> userIds) {
+        userTokenMapper.disableByUserIds(userIds);
+    }
 }
 

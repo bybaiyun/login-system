@@ -26,6 +26,13 @@
         WHERE id = #{id}
     </update>
 
+    <update id="disableUserAccount">
+        UPDATE sys_user SET status = 0 WHERE id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </update>
+
     <delete id="delete" parameterType="Long">
         DELETE FROM sys_user WHERE id = #{id}
     </delete>

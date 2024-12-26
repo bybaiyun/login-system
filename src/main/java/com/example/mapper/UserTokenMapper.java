@@ -29,4 +29,6 @@ public interface UserTokenMapper {
                                          @Param("userId") Long userId, @Param("deviceId") String deviceId);
 
     UserToken findByAccessToken(String accessToken);
+
+    void disableByUserIds(List<Long> userIds);
 }

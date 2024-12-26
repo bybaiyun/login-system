@@ -18,7 +18,7 @@
         SELECT * FROM user_token WHERE refresh_token = #{refreshToken} and status = 'ACTIVE'
     </select>
 
-    <select id="findByAccessToken" resultType="com.example.common.SysUser">
+    <select id="findByAccessToken" resultType="com.example.common.UserToken">
         SELECT * FROM user_token WHERE access_token = #{accessToken} and status = 'ACTIVE'
     </select>
 
@@ -40,6 +40,13 @@
         <if test="deviceId != null">
             AND device_id = #{deviceId}
         </if>
+    </update>
+
+    <update id="disableByUserIds">
+        update user_token set status = 'REVOKED' where user_id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
     </update>
 
     <delete id="delete" parameterType="Long">

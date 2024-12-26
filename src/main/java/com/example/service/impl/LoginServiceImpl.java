@@ -1,11 +1,16 @@
 package com.example.service.impl;
 
+import com.example.AccountStatusEnum;
 import com.example.common.*;
 import com.example.service.CustomTokenService;
 import com.example.service.LoginService;
+import com.example.service.SysUserService;
 import com.example.utils.IPUtils;
 import com.example.utils.SecurityUtils;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.token.Token;
 import org.springframework.security.core.token.TokenService;
@@ -20,13 +25,17 @@ import java.time.LocalDateTime;
  * @Description:
  */
 @Service("loginService")
+@RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
 
-    @Resource
-    private CustomTokenService tokenService;
+    private final CustomTokenService tokenService;
+
+    private final SysUserService sysUserService;
 
     @Override
     public LoginResponse login(CustomUserDetails userDetails, LoginRequest loginRequest) {
+        //只有通过密码校验之后才检查账户状态
+        sysUserService.checkAccountStatus(userDetails.getStatus());
         TokenPair pair = tokenService.createTokenPair(userDetails);
         tokenService.save(buildUserToken(userDetails, pair, loginRequest));
         return buildLoginResponse(userDetails, pair);
@@ -46,11 +55,6 @@ public class LoginServiceImpl implements LoginService {
     public void logout() {
         CustomUserDetails details = SecurityUtils.getCurrentUserDetails();
         tokenService.logoutByDetail(details);
-    }
-
-    @Override
-    public boolean checkToken(String jwtToken) {
-        return false;
     }
 
     private UserToken buildUserToken(CustomUserDetails details, TokenPair pair, LoginRequest request){

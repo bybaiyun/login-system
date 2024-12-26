@@ -1,7 +1,5 @@
 package com.example.common;
 
-import lombok.Builder;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -18,17 +16,16 @@ public class CustomUserDetails extends User {
     private Long userId;
     private String accessToken;
     private String ipAddress;
-    /**
-     * accessToken过期时间
-     */
-    private LocalDateTime expiresAt;
     private String deviceId;
+    private Integer status;
 
-    public CustomUserDetails(Long userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(Long userId, String username, String password, Integer status,
+                             Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.userId = userId;
         this.accessToken = accessToken;
         this.deviceId = deviceId;
+        this.status = status;
     }
 
     public Long getUserId() {
@@ -61,6 +58,14 @@ public class CustomUserDetails extends User {
 
     public void setIpAddress(String ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
 

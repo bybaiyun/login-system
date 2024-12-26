@@ -4,6 +4,8 @@ import com.example.common.CustomUserDetails;
 import com.example.common.TokenPair;
 import com.example.common.UserToken;
 
+import java.util.List;
+
 public interface CustomTokenService {
     /**
      * 验证refreshToken是否有效<p>
@@ -32,4 +34,6 @@ public interface CustomTokenService {
     void save(UserToken token);
 
     void validateAccessToken(String accessToken);
+
+    void disableByUserIds(List<Long> userIds);
 }

@@ -4,8 +4,6 @@ import com.example.common.CustomUserDetails;
 import com.example.common.LoginRequest;
 import com.example.common.LoginResponse;
 import com.example.common.RefreshResponse;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public interface LoginService {
     /**
@@ -22,9 +20,4 @@ public interface LoginService {
      * 用户登出
      */
     void logout();
-
-    /**
-     * 检查token是否有效
-     */
-    boolean checkToken(String jwtToken);
 }
