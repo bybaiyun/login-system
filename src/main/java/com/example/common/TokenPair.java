@@ -1,28 +1,22 @@
 package com.example.common;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * @Author: suragi
- * @Date: 2024/12/23 20:22
+ * @Date: 2024/12/26 14:14
  * @Description:
  */
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-public class LoginResponse implements Serializable {
-    private Long userId;
-    private String username;
+public class TokenPair {
     private String accessToken;
     private String refreshToken;
-    /**
-     * accessToken过期时间
-     */
     private LocalDateTime accessTokenExpiresAt;
 }
 

@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.common.CustomUserDetails;
 import com.example.common.LoginRequest;
 import com.example.common.LoginResponse;
+import com.example.common.RefreshResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,14 +14,14 @@ public interface LoginService {
     LoginResponse login(CustomUserDetails userDetails);
 
     /**
-     * 刷新token
+     * 由有效的RefreshToken刷新AccessToken
      */
-    LoginResponse refreshToken(String refreshToken);
+    RefreshResponse refreshToken(String refreshToken);
 
     /**
      * 用户登出
      */
-    void logout(String accessToken);
+    void logout();
 
     /**
      * 检查token是否有效

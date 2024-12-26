@@ -1,9 +1,6 @@
 package com.example.controller;
 
-import com.example.common.CustomUserDetails;
-import com.example.common.LoginRequest;
-import com.example.common.LoginResponse;
-import com.example.common.Result;
+import com.example.common.*;
 import com.example.service.LoginService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 登录控制器
@@ -39,7 +33,8 @@ public class AuthController {
     @PostMapping("/login")
     public Result<LoginResponse> login(@RequestBody LoginRequest loginRequest){
         log.info("用户登录请求: {}", loginRequest);
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         if(authentication == null){
             log.error("authentication对象为空");
             return Result.error("登陆失败");
@@ -57,7 +52,7 @@ public class AuthController {
          *
          *
          * 通常不直接使用 authentication 对象，因为我们在 userDetailService 中会自定义 loadUserByUsername 方法
-         * 该方法会返回一个自定义的 CustomUserDetails对象，该对象中包含用户信息，包括 userId，用户名、密码、角色权限等。
+         * 该方法会返回一个自定义的 CustomUserDetails 对象，该对象中包含用户信息，包括 userId，用户名、密码、角色权限等。
          * 该自定义返回对象会被封装进 UserDetails 的 principal 属性中
          * 所以将 authentication 的 principal 推荐降级成 CustomUserDetails
          */
@@ -70,13 +65,15 @@ public class AuthController {
     @PostMapping("/logout")
     public Result<String> logout(){
         log.info("用户登出请求");
+        loginService.logout();
         return Result.success("ok");
     }
 
     @PostMapping("/refresh")
-    public Result<LoginResponse> refresh(){
+    public Result<RefreshResponse> refresh(@RequestBody RefreshRequest refreshRequest){
         log.info("刷新token请求");
-        return Result.success(null);
+        RefreshResponse response = loginService.refreshToken(refreshRequest.getRefreshToken());
+        return Result.success(response);
     }
 }
 

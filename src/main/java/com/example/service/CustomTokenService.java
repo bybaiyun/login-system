@@ -1,14 +1,30 @@
 package com.example.service;
 
 import com.example.common.CustomUserDetails;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.example.common.TokenPair;
 
 public interface CustomTokenService {
     /**
-     * 创建accessToken
+     * 验证refreshToken是否有效<p>
+     * 包括是否伪造、是否过期<p>
+     * 如果无效则抛出异常
+     * @param refreshToken
+     */
+    void validateRefreshToken(String refreshToken);
+
+    /**
+     * 创建accessToken & refreshToken
      * @param userDetails
      * @return
      */
-    String createAccessToken(CustomUserDetails userDetails);
+    TokenPair createTokenPair(CustomUserDetails userDetails);
+
+    /**
+     * 由refreshToken创建accessToken
+     * @param refreshToken
+     * @return
+     */
+    TokenPair createAccessTokenByReresshToken(String refreshToken);
+
+    void logoutByDetail(CustomUserDetails details);
 }

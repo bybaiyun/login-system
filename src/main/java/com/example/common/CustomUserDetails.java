@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 /**
@@ -16,14 +17,18 @@ public class CustomUserDetails extends User {
 
     private Long userId;
     private String accessToken;
-    //private String refreshToken;
+    /**
+     * accessToken过期时间
+     */
+    private LocalDateTime expiresAt;
     private String deviceId;
 
-    public CustomUserDetails(Long userId, String username, String password,
+    public CustomUserDetails(Long userId, String username, String password, LocalDateTime expiresAt,
                              String deviceId, String accessToken, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.userId = userId;
         this.accessToken = accessToken;
+        this.expiresAt = expiresAt;
         //this.refreshToken = refreshToken;
         this.deviceId = deviceId;
     }

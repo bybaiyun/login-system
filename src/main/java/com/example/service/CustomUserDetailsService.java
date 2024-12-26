@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * 自定义spring security相关的用户信息查询逻辑
@@ -31,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         // 查询用户信息
         SysUser user = sysUserMapper.findByUserName(userName);
-        if (user == null) {
+        if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("User not found");
         }
 
@@ -44,8 +45,9 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
-                userToken.getDeviceId(),
+                userToken.getAccessTokenExpiresAt(),
                 userToken.getAccessToken(),
+                userToken.getDeviceId(),
                 Collections.emptyList() // 权限列表，后续可扩展
         );
     }

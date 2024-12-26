@@ -6,5 +6,8 @@ package com.example.utils;
  * @Description:
  */
 public class IPUtils {
+    public static String getIpAddr() {
+        return "";
+    }
 }
 
